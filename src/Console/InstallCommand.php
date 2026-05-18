@@ -18,13 +18,14 @@ class InstallCommand extends Command
     {
         $basePath = base_path();
         $force = (bool) $this->option('force');
+        $withAuth = (bool) $this->option('auth');
 
-        $this->updateComposer($basePath);
+        $this->updateComposer($basePath, $withAuth);
         $this->updatePackageJson($basePath);
         $this->copyStubs($files, $basePath, $force);
         $this->ensureInertiaMiddleware($files, $basePath);
 
-        if ($this->option('auth')) {
+        if ($withAuth) {
             $this->installAuth($files, $basePath, $force);
         }
 
@@ -34,15 +35,18 @@ class InstallCommand extends Command
         return self::SUCCESS;
     }
 
-    private function updateComposer(string $basePath): void
+    private function updateComposer(string $basePath, bool $withAuth): void
     {
         $path = $basePath.'/composer.json';
         $json = $this->readJson($path);
 
         $json['require']['inertiajs/inertia-laravel'] = '^3.0';
-        $json['require']['bacon/bacon-qr-code'] = '^3.1';
-        $json['require']['pragmarx/google2fa'] = '^9.0';
         $json['require']['tightenco/ziggy'] = '^2.6';
+
+        if ($withAuth) {
+            $json['require']['bacon/bacon-qr-code'] = '^3.1';
+            $json['require']['pragmarx/google2fa'] = '^9.0';
+        }
 
         $this->writeJson($path, $json);
     }
@@ -99,7 +103,12 @@ class InstallCommand extends Command
         $this->copyDirectory($files, $stubPath.'/app/Http/Requests/Auth', $basePath.'/app/Http/Requests/Auth', $force);
         $this->copyDirectory($files, $stubPath.'/app/Http/Requests/Settings', $basePath.'/app/Http/Requests/Settings', $force);
         $this->copyDirectory($files, $stubPath.'/app/Support/Auth', $basePath.'/app/Support/Auth', $force);
-        $this->copyDirectory($files, $stubPath.'/database/migrations', $basePath.'/database/migrations', $force);
+        $this->copyFile(
+            $files,
+            $stubPath.'/database/migrations/2026_01_01_000100_add_two_factor_columns_to_users_table.php',
+            $basePath.'/database/migrations/2026_01_01_000100_add_two_factor_columns_to_users_table.php',
+            $force
+        );
         $this->copyDirectory($files, $stubPath.'/resources/js/Pages/Auth', $basePath.'/resources/js/Pages/Auth', $force);
         $this->copyDirectory($files, $stubPath.'/resources/js/Pages/Settings', $basePath.'/resources/js/Pages/Settings', $force);
         $this->copyDirectory($files, $stubPath.'/tests/Feature/Auth', $basePath.'/tests/Feature/Auth', $force);
@@ -119,21 +128,15 @@ class InstallCommand extends Command
         $contents = $files->get($bootstrapPath);
 
         if (! str_contains($contents, "routes/auth.php")) {
-            $contents = str_replace(
-                "        health: '/up',\n    )",
-                "        health: '/up',\n        then: function () {\n            Route::middleware('web')->group(base_path('routes/auth.php'));\n        },\n    )",
-                $contents
-            );
-        }
-
-        if (! str_contains($contents, 'use Illuminate\Support\Facades\Route;')) {
             $contents = preg_replace(
-                '/use Illuminate\\\\Foundation\\\\Configuration\\\\Middleware;\R/',
-                "use Illuminate\\Foundation\\Configuration\\Middleware;\nuse Illuminate\\Support\\Facades\\Route;\n",
+                "/(health:\s*'\/up',\R)(\s*\))/",
+                "$1        then: function (): void {\n            Route::middleware('web')->group(base_path('routes/auth.php'));\n        },\n$2",
                 $contents,
                 1
             );
         }
+
+        $contents = $this->ensureUseStatement($contents, 'use Illuminate\Support\Facades\Route;');
 
         $files->put($bootstrapPath, $contents);
     }
@@ -143,22 +146,8 @@ class InstallCommand extends Command
         $bootstrapPath = $basePath.'/bootstrap/app.php';
         $contents = $files->get($bootstrapPath);
 
-        if (! str_contains($contents, 'App\Http\Middleware\EnsureTwoFactorChallengeIsComplete')) {
-            $contents = preg_replace(
-                '/use App\\\\Http\\\\Middleware\\\\HandleInertiaRequests;\R/',
-                "use App\\Http\\Middleware\\HandleInertiaRequests;\nuse App\\Http\\Middleware\\EnsureTwoFactorChallengeIsComplete;\n",
-                $contents,
-                1
-            );
-        }
-
-        if (! str_contains($contents, 'EnsureTwoFactorChallengeIsComplete::class')) {
-            $contents = str_replace(
-                '$middleware->web(append: [HandleInertiaRequests::class]);',
-                '$middleware->web(append: [HandleInertiaRequests::class, EnsureTwoFactorChallengeIsComplete::class]);',
-                $contents
-            );
-        }
+        $contents = $this->ensureUseStatement($contents, 'use App\Http\Middleware\EnsureTwoFactorChallengeIsComplete;');
+        $contents = $this->appendWebMiddleware($contents, 'EnsureTwoFactorChallengeIsComplete');
 
         $files->put($bootstrapPath, $contents);
     }
@@ -175,22 +164,8 @@ class InstallCommand extends Command
         $bootstrapPath = $basePath.'/bootstrap/app.php';
         $contents = $files->get($bootstrapPath);
 
-        if (! str_contains($contents, 'App\Http\Middleware\HandleInertiaRequests')) {
-            $contents = preg_replace(
-                '/use Illuminate\\\\Foundation\\\\Configuration\\\\Middleware;\R/',
-                "use Illuminate\\Foundation\\Configuration\\Middleware;\nuse App\\Http\\Middleware\\HandleInertiaRequests;\n",
-                $contents,
-                1
-            );
-        }
-
-        if (! str_contains($contents, '$middleware->web(append: [HandleInertiaRequests::class]);')) {
-            $contents = str_replace(
-                "    ->withMiddleware(function (Middleware \$middleware): void {\n        //\n    })",
-                "    ->withMiddleware(function (Middleware \$middleware): void {\n        \$middleware->web(append: [HandleInertiaRequests::class]);\n    })",
-                $contents
-            );
-        }
+        $contents = $this->ensureUseStatement($contents, 'use App\Http\Middleware\HandleInertiaRequests;');
+        $contents = $this->appendWebMiddleware($contents, 'HandleInertiaRequests');
 
         $files->put($bootstrapPath, $contents);
     }
@@ -209,6 +184,10 @@ class InstallCommand extends Command
 
     private function copyDirectory(Filesystem $files, string $from, string $to, bool $force): void
     {
+        if (! $files->isDirectory($from)) {
+            return;
+        }
+
         if ($files->exists($to) && $force) {
             $files->deleteDirectory($to);
         }
@@ -221,6 +200,38 @@ class InstallCommand extends Command
 
         $files->ensureDirectoryExists($to);
         $files->copyDirectory($from, $to);
+    }
+
+    private function ensureUseStatement(string $contents, string $statement): string
+    {
+        if (str_contains($contents, $statement)) {
+            return $contents;
+        }
+
+        return preg_replace('/<\?php\R+/', "<?php\n\n{$statement}\n", $contents, 1) ?? $contents;
+    }
+
+    private function appendWebMiddleware(string $contents, string $class): string
+    {
+        if (str_contains($contents, "{$class}::class")) {
+            return $contents;
+        }
+
+        if (preg_match('/\$middleware->web\(append:\s*\[(?<classes>[^\]]*)\]\);/', $contents)) {
+            return preg_replace_callback(
+                '/\$middleware->web\(append:\s*\[(?<classes>[^\]]*)\]\);/',
+                fn (array $matches): string => '$middleware->web(append: ['.trim($matches['classes']).', '.$class.'::class]);',
+                $contents,
+                1
+            ) ?? $contents;
+        }
+
+        return preg_replace(
+            "/->withMiddleware\(function \(Middleware \$middleware\): void \{\R\s*\/\/\R\s*\}\)/",
+            "->withMiddleware(function (Middleware \$middleware): void {\n        \$middleware->web(append: [{$class}::class]);\n    })",
+            $contents,
+            1
+        ) ?? $contents;
     }
 
     /**

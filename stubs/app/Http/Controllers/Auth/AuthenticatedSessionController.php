@@ -25,7 +25,7 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $user = $request->user();
+        $user = Auth::user();
         $remember = $request->boolean('remember');
 
         Auth::logout();

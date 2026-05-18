@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\TwoFactorChallengeRequest;
 use App\Models\User;
 use App\Support\Auth\TwoFactorAuthentication;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -49,5 +50,13 @@ class TwoFactorAuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->session()->forget(['login.id', 'login.remember']);
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }

@@ -1,9 +1,11 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Divider from 'primevue/divider';
 import AppLayout from '@/Layouts/AppLayout.vue';
+
+const page = usePage();
 
 const stack = [
     ['Laravel', 'Rutas, controladores y servicios en PHP 8.4.'],
@@ -31,8 +33,9 @@ const stack = [
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <Button label="Ver dashboard" icon="pi pi-send" severity="contrast" />
-                    <Button label="Leer README" icon="pi pi-book" outlined severity="secondary" />
+                    <Button v-if="page.props.auth.user" as="a" :href="route('dashboard')" label="Ver dashboard" icon="pi pi-send" />
+                    <Button v-else as="a" :href="route('login')" label="Entrar" icon="pi pi-sign-in" />
+                    <Button v-if="!page.props.auth.user" as="a" :href="route('register')" label="Crear cuenta" icon="pi pi-user-plus" outlined severity="secondary" />
                 </div>
             </div>
 

@@ -15,6 +15,10 @@ class TwoFactorAuthenticationController extends Controller
     {
         abort_unless(config('servicios-linea-once.auth.two_factor.enabled', true), 404);
 
+        if ($request->user()->hasEnabledTwoFactorAuthentication()) {
+            return back()->with('status', 'two-factor-already-enabled');
+        }
+
         $secret = $twoFactor->generateSecret();
 
         $request->session()->put('two_factor.secret', $secret);

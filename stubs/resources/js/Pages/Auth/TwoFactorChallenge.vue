@@ -1,5 +1,5 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import AuthCard from '@/Components/AuthCard.vue';
@@ -19,6 +19,8 @@ const submitRecovery = () => {
     form.code = '';
     form.post(route('two-factor.verify'));
 };
+
+const cancelChallenge = () => router.delete(route('two-factor.cancel'));
 </script>
 
 <template>
@@ -44,5 +46,7 @@ const submitRecovery = () => {
             </div>
             <Button type="submit" label="Usar recuperación" icon="pi pi-key" severity="secondary" outlined class="w-full" :loading="form.processing" />
         </form>
+
+        <Button label="Volver al login" icon="pi pi-arrow-left" severity="secondary" text class="mt-5 w-full" @click="cancelChallenge" />
     </AuthCard>
 </template>

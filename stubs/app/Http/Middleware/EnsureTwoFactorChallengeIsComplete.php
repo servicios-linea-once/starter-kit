@@ -12,7 +12,7 @@ class EnsureTwoFactorChallengeIsComplete
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        if ($request->session()->has('login.id') && ! $request->routeIs('two-factor.*', 'logout')) {
+        if ($request->session()->has('login.id') && ! $request->routeIs('two-factor.*')) {
             return redirect()->route('two-factor.login');
         }
 

@@ -33,6 +33,7 @@ Route::middleware('guest')->group(function () {
 
 Route::get('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])->name('two-factor.login');
 Route::post('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])->name('two-factor.verify');
+Route::delete('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'destroy'])->name('two-factor.cancel');
 
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -54,9 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('settings/profile', [ProfileController::class, 'destroy'])
-        ->middleware('password.confirm')
-        ->name('profile.destroy');
+    Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
     Route::delete('settings/sessions', [BrowserSessionController::class, 'destroy'])->name('sessions.destroy');
@@ -67,10 +66,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('settings/two-factor/confirm', [TwoFactorAuthenticationController::class, 'confirm'])
         ->middleware('password.confirm')
         ->name('two-factor.confirm');
-    Route::delete('settings/two-factor', [TwoFactorAuthenticationController::class, 'destroy'])
-        ->middleware('password.confirm')
-        ->name('two-factor.disable');
-    Route::post('settings/two-factor/recovery-codes', [RecoveryCodeController::class, 'store'])
-        ->middleware('password.confirm')
-        ->name('two-factor.recovery-codes');
+    Route::delete('settings/two-factor', [TwoFactorAuthenticationController::class, 'destroy'])->name('two-factor.disable');
+    Route::post('settings/two-factor/recovery-codes', [RecoveryCodeController::class, 'store'])->name('two-factor.recovery-codes');
 });

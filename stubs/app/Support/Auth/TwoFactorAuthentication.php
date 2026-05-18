@@ -44,6 +44,11 @@ class TwoFactorAuthentication
         );
     }
 
+    public function currentOtp(string $secret): string
+    {
+        return $this->google2fa->getCurrentOtp($secret);
+    }
+
     /**
      * @return array<int, string>
      */

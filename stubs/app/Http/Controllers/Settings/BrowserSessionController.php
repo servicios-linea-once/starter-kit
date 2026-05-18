@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BrowserSessionController extends Controller
 {
@@ -18,7 +19,7 @@ class BrowserSessionController extends Controller
         Auth::logoutOtherDevices($request->password);
 
         if (config('session.driver') === 'database') {
-            \DB::table(config('session.table', 'sessions'))
+            DB::table(config('session.table', 'sessions'))
                 ->where('user_id', $request->user()->getAuthIdentifier())
                 ->where('id', '!=', $request->session()->getId())
                 ->delete();
