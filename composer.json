@@ -1,0 +1,26 @@
+{
+    "name": "servicioslineaonce/starter-kit",
+    "description": "Servicios Linea Once starter kit for Laravel, Inertia, Vue, PrimeVue, Ziggy, and Tailwind CSS.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "illuminate/console": "^13.0",
+        "illuminate/filesystem": "^13.0",
+        "illuminate/support": "^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ServiciosLineaOnce\\StarterKit\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ServiciosLineaOnce\\StarterKit\\StarterKitServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
