@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+@import "theme-effects.css";
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/servicioslineaonce/starter-kit/stubs/presets/primevue/**/*.vue';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.vue';
+
+@theme {
+    --font-sans: 'Aptos', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --color-ink: #e5edf5;
+    --color-paper: #050b18;
+    --color-signal: #12c8ff;
+    --color-radar: #8b5cf6;
+}
+
+html {
+    background: #050b18;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    font-family: var(--font-sans);
+    color: #e5edf5;
+    background: #050b18;
+}
+
+#app {
+    min-height: 100vh;
+}
+
+button,
+a {
+    transition-duration: 160ms;
+    transition-property: background-color, border-color, color, opacity, transform;
+    transition-timing-function: ease-out;
+}

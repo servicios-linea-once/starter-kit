@@ -1,0 +1,304 @@
+@import 'tailwindcss';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/servicioslineaonce/starter-kit/stubs/presets/react/**/*.jsx';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.jsx';
+
+@theme {
+    --font-sans: 'Aptos', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --color-ink: #e5edf5;
+    --color-paper: #050b18;
+    --color-signal: #12c8ff;
+    --color-radar: #8b5cf6;
+}
+
+html {
+    background: #050b18;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    font-family: var(--font-sans);
+    color: #e5edf5;
+    background:
+        radial-gradient(circle at 18% 16%, rgba(18, 200, 255, 0.18), transparent 24rem),
+        radial-gradient(circle at 84% 10%, rgba(139, 92, 246, 0.18), transparent 28rem),
+        linear-gradient(180deg, #050b18 0%, #07111f 52%, #040815 100%);
+}
+
+#app {
+    min-height: 100vh;
+}
+
+.kit-shell {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(5, 11, 24, 0.88), rgba(4, 8, 21, 0.98)),
+        radial-gradient(circle at 14% 8%, rgba(18, 200, 255, 0.18), transparent 20rem),
+        radial-gradient(circle at 82% 0%, rgba(139, 92, 246, 0.16), transparent 24rem),
+        #050b18;
+}
+
+.kit-shell::before,
+.kit-auth-shell::before {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    content: "";
+    background:
+        linear-gradient(110deg, transparent 0 22%, rgba(18, 200, 255, 0.16) 23%, transparent 24% 52%, rgba(139, 92, 246, 0.14) 53%, transparent 54%),
+        repeating-linear-gradient(100deg, rgba(18, 200, 255, 0.08) 0 1px, transparent 1px 130px);
+    mask-image: linear-gradient(180deg, transparent, black 16%, black 78%, transparent);
+}
+
+.kit-shell::after,
+.kit-auth-shell::after {
+    pointer-events: none;
+    position: fixed;
+    inset-inline: -12%;
+    bottom: -8rem;
+    height: 28rem;
+    content: "";
+    background:
+        repeating-radial-gradient(ellipse at center, transparent 0 32px, rgba(18, 200, 255, 0.14) 33px 34px, transparent 35px 72px),
+        repeating-radial-gradient(ellipse at center, transparent 0 46px, rgba(139, 92, 246, 0.13) 47px 48px, transparent 49px 96px);
+    opacity: 0.72;
+    transform: perspective(680px) rotateX(58deg);
+    transform-origin: center bottom;
+}
+
+.kit-auth-shell {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 14%, rgba(18, 200, 255, 0.18), transparent 23rem),
+        radial-gradient(circle at 86% 6%, rgba(139, 92, 246, 0.18), transparent 25rem),
+        linear-gradient(180deg, #050b18 0%, #07111f 50%, #040815 100%);
+}
+
+.kit-content {
+    position: relative;
+    z-index: 1;
+}
+
+.kit-panel {
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    background:
+        linear-gradient(180deg, rgba(13, 24, 45, 0.9), rgba(7, 15, 31, 0.88));
+    box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.kit-brand-mark {
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(18, 200, 255, 0.45);
+    background:
+        linear-gradient(135deg, rgba(18, 200, 255, 0.18), rgba(139, 92, 246, 0.2)),
+        rgba(6, 13, 28, 0.92);
+    color: #67e8f9;
+    box-shadow:
+        0 0 32px rgba(18, 200, 255, 0.24),
+        inset 0 0 18px rgba(139, 92, 246, 0.18);
+}
+
+.kit-brand-letter {
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 0 16px rgba(18, 200, 255, 0.75);
+}
+
+.kit-gradient-button {
+    border: 0;
+    background: linear-gradient(135deg, #12c8ff 0%, #8b5cf6 100%);
+    color: #ffffff;
+    box-shadow: 0 16px 36px rgba(18, 200, 255, 0.24);
+}
+
+.kit-showcase-header {
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+    padding-top: 0.5rem;
+    text-align: center;
+}
+
+.kit-brand-lockup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.kit-brand-title {
+    color: #ffffff;
+    font-size: clamp(2rem, 5vw, 3.35rem);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow: 0 0 26px rgba(255, 255, 255, 0.24);
+}
+
+.kit-brand-subtitle {
+    color: rgba(226, 232, 240, 0.72);
+    font-size: clamp(0.78rem, 2vw, 1.05rem);
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+}
+
+.kit-brand-underline {
+    width: 4rem;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, #12c8ff, #8b5cf6, transparent);
+    box-shadow: 0 0 18px rgba(18, 200, 255, 0.7);
+}
+
+.kit-panel-tab {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    min-width: 8.5rem;
+    transform: translateX(-50%);
+    border: 1px solid rgba(18, 200, 255, 0.35);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.78), rgba(126, 34, 206, 0.86));
+    padding: 0.42rem 1.15rem;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: 0 10px 26px rgba(88, 28, 135, 0.34);
+}
+
+.kit-visual-card {
+    position: relative;
+    min-height: 25rem;
+    overflow: hidden;
+    border: 1px solid rgba(18, 200, 255, 0.24);
+    border-radius: 8px;
+    background: radial-gradient(circle at 52% 44%, rgba(18, 200, 255, 0.18), transparent 8rem), radial-gradient(circle at 74% 72%, rgba(139, 92, 246, 0.2), transparent 10rem), rgba(7, 15, 31, 0.78);
+    box-shadow: inset 0 0 60px rgba(18, 200, 255, 0.08);
+}
+
+.kit-portal {
+    position: absolute;
+    inset-inline: 50%;
+    bottom: 3.5rem;
+    width: 11rem;
+    height: 15rem;
+    transform: translateX(-50%);
+    border: 2px solid rgba(18, 200, 255, 0.68);
+    border-bottom: 0;
+    border-radius: 5.5rem 5.5rem 0 0;
+    background: linear-gradient(180deg, rgba(18, 200, 255, 0.12), rgba(139, 92, 246, 0.18));
+    box-shadow: 0 0 42px rgba(18, 200, 255, 0.34), inset 0 0 30px rgba(139, 92, 246, 0.32);
+}
+
+.kit-portal::before {
+    position: absolute;
+    inset: 1rem 3.1rem 0;
+    content: "";
+    border-radius: 999px 999px 0 0;
+    background: linear-gradient(180deg, #12c8ff, rgba(139, 92, 246, 0.18));
+    filter: blur(1px);
+    box-shadow: 0 0 34px rgba(18, 200, 255, 0.78);
+}
+
+.kit-portal::after {
+    position: absolute;
+    left: 50%;
+    bottom: -2rem;
+    width: 16rem;
+    height: 4rem;
+    content: "";
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(18, 200, 255, 0.36), transparent 62%), radial-gradient(ellipse, rgba(139, 92, 246, 0.42), transparent 70%);
+    filter: blur(2px);
+}
+
+.kit-orb-check {
+    display: grid;
+    place-items: center;
+    width: 8rem;
+    height: 8rem;
+    margin-inline: auto;
+    border: 2px solid rgba(18, 200, 255, 0.72);
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(18, 200, 255, 0.2), rgba(37, 99, 235, 0.13));
+    color: #67e8f9;
+    font-size: 4rem;
+    box-shadow: 0 0 42px rgba(18, 200, 255, 0.38), inset 0 0 28px rgba(139, 92, 246, 0.28);
+}
+
+.kit-stat-card,
+.kit-inner-card {
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 8px;
+    background: rgba(8, 17, 35, 0.74);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.kit-chart-line {
+    position: relative;
+    height: 11rem;
+    overflow: hidden;
+    border-radius: 8px;
+    background: radial-gradient(circle at 84% 22%, rgba(139, 92, 246, 0.28), transparent 5rem), linear-gradient(180deg, transparent 24%, rgba(148, 163, 184, 0.12) 25%, transparent 26%, transparent 49%, rgba(148, 163, 184, 0.1) 50%, transparent 51%, transparent 74%, rgba(148, 163, 184, 0.08) 75%, transparent 76%);
+}
+
+.kit-chart-line::after {
+    position: absolute;
+    inset: 18% 5% 22%;
+    content: "";
+    background: linear-gradient(100deg, #12c8ff 0 22%, #38bdf8 23% 36%, #8b5cf6 37% 66%, #d946ef 67% 100%);
+    clip-path: polygon(0 74%, 10% 58%, 20% 47%, 30% 55%, 41% 34%, 52% 24%, 64% 65%, 75% 52%, 84% 25%, 91% 45%, 100% 20%, 100% 25%, 91% 50%, 84% 30%, 75% 57%, 64% 70%, 52% 29%, 41% 39%, 30% 60%, 20% 52%, 10% 63%, 0 79%);
+    filter: drop-shadow(0 0 12px rgba(18, 200, 255, 0.58));
+}
+
+.kit-donut {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 999px;
+    background: conic-gradient(#12c8ff 0 38%, #3b82f6 38% 62%, #8b5cf6 62% 82%, #d946ef 82% 100%);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.24);
+}
+
+.kit-donut::after {
+    display: block;
+    width: 4.8rem;
+    height: 4.8rem;
+    margin: 1.6rem;
+    border-radius: inherit;
+    background: #07111f;
+    content: "";
+}
+
+.kit-link {
+    font-weight: 700;
+    color: #67e8f9;
+}
+
+.kit-link:hover {
+    color: #cffafe;
+}
+
+button,
+a {
+    transition-duration: 160ms;
+    transition-property: background-color, border-color, color, opacity, transform;
+    transition-timing-function: ease-out;
+}
