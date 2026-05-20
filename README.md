@@ -205,7 +205,20 @@ Cuando instalas `wireui`, el comando elimina el middleware de Inertia si estaba 
 Instala el paquete desde la raiz de tu proyecto Laravel:
 
 ```bash
-composer require servicioslineaonce/starter-kit --dev
+composer require servicioslineaonce/starter-kit:^1.0 --dev
+```
+
+Si Composer muestra un error de `minimum-stability (stable)`, el repositorio todavia no tiene un tag estable publicado para esa version. Mientras trabajas contra la rama `main`, instala explicitamente la version de desarrollo:
+
+```bash
+composer require "servicioslineaonce/starter-kit:^1.0@dev" --dev
+```
+
+Para desarrollo local desde este monorepo, registra el paquete como repositorio `path` y luego instalalo:
+
+```bash
+composer config repositories.servicioslineaonce path packages/kitlauncher/starter-kit
+composer require servicioslineaonce/starter-kit:^1.0 --dev
 ```
 
 Laravel descubre automaticamente este service provider:
@@ -712,6 +725,25 @@ php artisan test
 ```
 
 ## Troubleshooting
+
+### Composer no encuentra una version compatible con `minimum-stability (stable)`
+
+Composer solo considera estable una version que existe como tag Git, por ejemplo `v1.0.0`. Si el paquete solo existe en la rama `main`, Composer lo resuelve como `dev-main` y una aplicacion con `minimum-stability: stable` lo rechaza.
+
+Para usar la rama actual:
+
+```bash
+composer require "servicioslineaonce/starter-kit:^1.0@dev" --dev
+```
+
+Para publicar una version estable:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Despues actualiza Packagist o espera el webhook del repositorio.
 
 ### `Class "Livewire\LivewireServiceProvider" not found`
 

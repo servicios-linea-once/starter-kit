@@ -29,6 +29,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        },
         "laravel": {
             "providers": [
                 "ServiciosLineaOnce\\StarterKit\\StarterKitServiceProvider"
