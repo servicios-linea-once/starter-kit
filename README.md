@@ -1,8 +1,6 @@
 # Servicio Linea Once Starter Kit
 
-`servicioslineaonce/starter-kit` es un paquete instalable para Laravel 13 que genera una base de aplicacion lista para autenticacion, panel inicial, internacionalizacion, frontend moderno y multiples presets de UI.
-
-Version actual: `1.0.0`.
+Starter kit instalable para Laravel que crea una base moderna con frontend, rutas, layouts, internacionalizacion y autenticacion lista para usar.
 
 El paquete registra el comando:
 
@@ -10,98 +8,136 @@ El paquete registra el comando:
 php artisan kitlauncher:install
 ```
 
-Su objetivo es evitar repetir el mismo scaffolding en cada proyecto: rutas, controladores, requests, vistas, componentes, configuracion frontend, dependencias Composer/NPM, autenticacion web, verificacion de email y 2FA TOTP.
+Con ese comando puedes elegir entre presets Inertia o Livewire, instalar autenticacion completa y preparar las dependencias Composer/NPM del proyecto.
 
-## Tabla de Contenido
+> Version actual: `1.0.0`
+> Paquete Composer: `servicioslineaonce/starter-kit`
 
-- [Que instala](#que-instala)
-- [Stacks y presets disponibles](#stacks-y-presets-disponibles)
+## Contenido
+
+- [Descripcion](#descripcion)
+- [Caracteristicas](#caracteristicas)
+- [Presets disponibles](#presets-disponibles)
 - [Requisitos](#requisitos)
 - [Instalacion](#instalacion)
-- [Uso del comando](#uso-del-comando)
-- [Autenticacion incluida](#autenticacion-incluida)
-- [Idiomas e internacionalizacion](#idiomas-e-internacionalizacion)
-- [Archivos que modifica](#archivos-que-modifica)
-- [Comandos posteriores](#comandos-posteriores)
-- [Agregar un nuevo preset UI](#agregar-un-nuevo-preset-ui)
+- [Uso rapido](#uso-rapido)
+- [Opciones del comando](#opciones-del-comando)
+- [Que archivos instala](#que-archivos-instala)
+- [Autenticacion](#autenticacion)
+- [Two-Factor Authentication](#two-factor-authentication)
+- [Internacionalizacion](#internacionalizacion)
+- [Flujo recomendado despues de instalar](#flujo-recomendado-despues-de-instalar)
+- [Cambiar de preset](#cambiar-de-preset)
+- [Estructura del paquete](#estructura-del-paquete)
+- [Crear un nuevo preset](#crear-un-nuevo-preset)
 - [Troubleshooting](#troubleshooting)
-- [Desarrollo del paquete](#desarrollo-del-paquete)
+- [Desarrollo](#desarrollo)
 - [Licencia](#licencia)
 
-## Que instala
+## Descripcion
 
-El paquete instala una base completa para iniciar una aplicacion Laravel con experiencia de usuario ya armada:
+`servicioslineaonce/starter-kit` evita repetir el mismo scaffolding cada vez que se inicia una aplicacion Laravel. El instalador copia archivos base, actualiza `composer.json`, actualiza `package.json`, configura Vite, registra middleware y opcionalmente instala un sistema de autenticacion completo.
 
-- Comando interactivo bilingue en consola.
-- Seleccion de stack entre Inertia y Livewire.
-- Seleccion de UI compatible con el stack elegido.
-- Configuracion de Composer segun el preset.
-- Configuracion de `package.json` segun el preset.
-- Configuracion de Vite y Tailwind CSS 4.
+Esta pensado para proyectos nuevos o proyectos donde quieres reemplazar el frontend inicial por uno de los presets soportados.
+
+El objetivo es dejar una aplicacion con:
+
 - Rutas web iniciales.
-- Layouts, paginas, componentes y estilos frontend.
-- Autenticacion web opcional.
-- Registro de usuarios opcional.
-- Login/logout.
-- Recuperacion de password.
-- Confirmacion de password.
+- Pantalla de bienvenida.
+- Dashboard inicial.
+- Layout principal.
+- Cambio de idioma entre espanol e ingles.
+- Frontend con Vite y Tailwind CSS 4.
+- Presets UI listos para desarrollar.
+- Autenticacion opcional.
 - Verificacion de email.
 - Perfil de usuario.
-- Actualizacion de password.
-- Cierre de otras sesiones.
+- Cambio de password.
 - Eliminacion de cuenta.
-- Autenticacion de dos factores TOTP.
-- Codigos de recuperacion 2FA.
-- Middleware de locale `SetLocale`.
-- Traducciones base en `lang/es/kit.php` y `lang/en/kit.php`.
-- Tests feature para el flujo de auth.
+- Cierre de otras sesiones.
+- Autenticacion de dos factores con TOTP.
+- Tests feature para flujos de auth.
 
-## Stacks y Presets Disponibles
+## Caracteristicas
 
-El comando organiza los presets en dos stacks.
+- Comando de instalacion interactivo.
+- Instalador bilingue en `en` y `es`.
+- Soporte para modo no interactivo.
+- Presets separados por stack: Inertia y Livewire.
+- Actualizacion automatica de dependencias Composer.
+- Actualizacion automatica de dependencias NPM.
+- Copia de stubs por capas: base + preset.
+- Registro automatico de middleware en `bootstrap/app.php`.
+- Limpieza de archivos obsoletos al usar `--force`.
+- Auth propia sin depender de Fortify.
+- 2FA TOTP con QR y codigos de recuperacion.
+- Traducciones base en `lang/es` y `lang/en`.
 
-| Stack | Preset UI | Frontend | Backend |
+## Presets disponibles
+
+| UI | Stack | Frontend | Backend |
 | --- | --- | --- | --- |
-| Inertia | `primevue` | Vue 3, PrimeVue, Ziggy, Tailwind CSS 4 | Laravel controllers + Inertia |
-| Inertia | `naive` | Vue 3, Naive UI, Ziggy, Tailwind CSS 4 | Laravel controllers + Inertia |
-| Inertia | `react` | React, MUI, componentes UI propios, Ziggy, Tailwind CSS 4 | Laravel controllers + Inertia |
-| Livewire | `wireui` | Blade, Livewire, WireUI, Tailwind CSS 4 | Laravel controllers + Livewire |
+| `primevue` | Inertia | Vue 3, PrimeVue, Ziggy, Tailwind CSS 4 | Controllers + Inertia |
+| `naive` | Inertia | Vue 3, Naive UI, Ziggy, Tailwind CSS 4 | Controllers + Inertia |
+| `react` | Inertia | React, MUI, componentes UI, Ziggy, Tailwind CSS 4 | Controllers + Inertia |
+| `wireui` | Livewire | Blade, Livewire, WireUI, Tailwind CSS 4 | Controllers + Livewire |
 
-### Preset `primevue`
+### PrimeVue
 
-Instala una base Inertia + Vue con PrimeVue:
+Preset Inertia + Vue 3 con PrimeVue.
+
+Dependencias principales:
 
 - `@inertiajs/vue3`
-- `primevue`
+- `@inertiajs/vite`
 - `@primeuix/themes`
 - `primeicons`
+- `primevue`
 - `vue`
 - `ziggy-js`
 - `@vitejs/plugin-vue`
-- `@inertiajs/vite`
 
-Incluye un preset visual en `resources/js/presets` y estilos adicionales en `resources/css/theme-effects.css`.
+Incluye:
 
-### Preset `naive`
+- `resources/js/app.js`
+- `resources/js/Pages/Welcome.vue`
+- `resources/js/Pages/Dashboard.vue`
+- `resources/js/Layouts/AppLayout.vue`
+- componentes compartidos
+- preset visual en `resources/js/presets`
+- estilos extra en `resources/css/theme-effects.css`
 
-Instala una base Inertia + Vue con Naive UI:
+### Naive UI
+
+Preset Inertia + Vue 3 con Naive UI.
+
+Dependencias principales:
 
 - `@inertiajs/vue3`
-- `naive-ui`
+- `@inertiajs/vite`
 - `@lucide/vue`
+- `naive-ui`
 - `vfonts`
 - `vue`
 - `ziggy-js`
 - `@vitejs/plugin-vue`
-- `@inertiajs/vite`
 
-Cuando se usa con `--force`, limpia archivos visuales propios de PrimeVue que ya no aplican.
+Incluye:
 
-### Preset `react`
+- providers globales de Naive UI
+- tema oscuro base
+- componentes de formulario
+- selector de idioma
+- paginas Inertia para welcome, dashboard y auth
 
-Instala una base Inertia + React con MUI y componentes propios:
+### React + MUI
+
+Preset Inertia + React con Material UI y componentes propios.
+
+Dependencias principales:
 
 - `@inertiajs/react`
+- `@inertiajs/vite`
 - `react`
 - `react-dom`
 - `@mui/material`
@@ -112,20 +148,48 @@ Instala una base Inertia + React con MUI y componentes propios:
 - `class-variance-authority`
 - `clsx`
 - `tailwind-merge`
+- `ziggy-js`
 - `@vitejs/plugin-react`
-- `@inertiajs/vite`
 
-Incluye componentes UI base como `button`, `input`, `card`, `badge`, `alert`, `checkbox`, `label`, `textarea`.
+Incluye componentes base:
 
-### Preset `wireui`
+- `Button`
+- `Input`
+- `Label`
+- `Checkbox`
+- `Card`
+- `Badge`
+- `Alert`
+- `Textarea`
 
-Instala una base Livewire + WireUI:
+Tambien incluye helpers en:
+
+```text
+resources/js/lib/i18n.jsx
+resources/js/lib/muiTheme.js
+resources/js/lib/utils.js
+```
+
+### WireUI
+
+Preset Livewire + WireUI para aplicaciones Blade.
+
+Dependencias principales:
 
 - `livewire/livewire`
 - `wireui/wireui`
 - `@tailwindcss/forms`
 
-Este preset no usa Inertia ni Ziggy. Al instalarlo con `--force`, el comando limpia middleware y archivos frontend propios de Inertia para evitar estados mixtos.
+Incluye:
+
+- layouts Blade
+- paginas Blade
+- componentes Livewire para auth
+- vistas Livewire
+- configuracion WireUI
+- Vite sin Inertia
+
+Cuando instalas `wireui`, el comando elimina el middleware de Inertia si estaba registrado anteriormente.
 
 ## Requisitos
 
@@ -133,187 +197,116 @@ Este preset no usa Inertia ni Ziggy. Al instalarlo con `--force`, el comando lim
 - Laravel `^13.0`
 - Composer
 - Node.js y NPM
-- Base de datos configurada para correr migraciones
-
-Para el proyecto Docker de este repositorio, los comandos se ejecutan dentro de los servicios:
-
-```bash
-docker compose exec app php artisan kitlauncher:install
-docker compose exec app composer install
-docker compose exec vite npm install
-docker compose exec vite npm run build
-```
+- Base de datos configurada
+- Proyecto Laravel con `composer.json`, `package.json` y `bootstrap/app.php`
 
 ## Instalacion
 
-### Como paquete local por path repository
-
-En este repositorio el paquete se usa como dependencia local:
-
-```json
-{
-    "repositories": [
-        {
-            "name": "servicioslineaonce",
-            "type": "path",
-            "url": "packages/kitlauncher/starter-kit"
-        }
-    ],
-    "require-dev": {
-        "servicioslineaonce/starter-kit": "^1.0"
-    }
-}
-```
-
-Luego:
-
-```bash
-composer install
-php artisan package:discover
-```
-
-### Como paquete Composer
-
-Si el paquete se publica en un repositorio Composer o Packagist:
+Instala el paquete desde la raiz de tu proyecto Laravel:
 
 ```bash
 composer require servicioslineaonce/starter-kit --dev
 ```
 
-Laravel descubre automaticamente el provider:
+Laravel descubre automaticamente este service provider:
 
 ```php
 ServiciosLineaOnce\StarterKit\StarterKitServiceProvider::class
 ```
 
-## Uso del Comando
-
-### Modo interactivo
-
-Ejecuta:
+Despues de instalar el paquete, ejecuta el instalador:
 
 ```bash
 php artisan kitlauncher:install
 ```
 
-El wizard pregunta:
-
-1. Idioma del instalador: `English` o `Español`.
-2. Stack: `Inertia` o `Livewire`.
-3. UI compatible con el stack elegido.
-4. Si instala autenticacion.
-5. Si sobrescribe archivos existentes.
-6. Si ejecuta comandos posteriores.
-
-La primera pregunta es bilingue porque el idioma aun no ha sido elegido:
-
-```text
-Choose installer language / Elige el idioma del instalador
-```
-
-Despues de elegir idioma, todas las preguntas siguientes se muestran en el idioma seleccionado.
-
-### Modo con flags
-
-Para automatizacion, CI o Docker, puedes pasar opciones:
+Tambien puedes instalar un preset directamente:
 
 ```bash
-php artisan kitlauncher:install --lang=es --ui=wireui --auth --force
-php artisan kitlauncher:install --lang=en --ui=primevue --auth --force
-php artisan kitlauncher:install --ui=react --auth
+php artisan kitlauncher:install --lang=es --ui=primevue --auth --force --no-interaction
 ```
 
-### Opciones disponibles
+Al terminar, sincroniza dependencias y compila los assets:
+
+```bash
+composer install
+npm install
+php artisan migrate
+npm run build
+```
+
+## Uso rapido
+
+### Instalacion interactiva
+
+```bash
+php artisan kitlauncher:install
+```
+
+El asistente pregunta:
+
+1. Idioma del instalador.
+2. Stack: `Inertia` o `Livewire`.
+3. UI compatible con el stack.
+4. Si quieres instalar autenticacion.
+5. Si quieres sobrescribir archivos existentes.
+6. Si quieres ejecutar comandos posteriores.
+
+### Instalacion no interactiva
+
+PrimeVue con autenticacion:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=primevue --auth --force --no-interaction
+```
+
+Naive UI con autenticacion:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=naive --auth --force --no-interaction
+```
+
+React + MUI con autenticacion:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=react --auth --force --no-interaction
+```
+
+Livewire + WireUI con autenticacion:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=wireui --auth --force --no-interaction
+```
+
+Solo frontend, sin auth:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=primevue --force --no-interaction
+```
+
+## Opciones del comando
 
 | Opcion | Descripcion |
 | --- | --- |
-| `--lang=en\|es` | Define idioma de los mensajes del comando. Si no se pasa en modo interactivo, pregunta primero. |
-| `--ui=primevue` | Instala preset Inertia + Vue + PrimeVue. |
-| `--ui=naive` | Instala preset Inertia + Vue + Naive UI. |
-| `--ui=react` | Instala preset Inertia + React + MUI. |
-| `--ui=wireui` | Instala preset Livewire + WireUI. |
-| `--auth` | Copia scaffolding de autenticacion, perfil, password, email verification y 2FA. |
-| `--force` | Sobrescribe archivos existentes y limpia archivos obsoletos del preset anterior. |
-| `--no-interaction` | No hace preguntas. Si no pasas `--ui`, usa `primevue`; si no pasas `--auth`, no instala auth. |
+| `--lang=en` | Muestra los mensajes del instalador en ingles. |
+| `--lang=es` | Muestra los mensajes del instalador en espanol. |
+| `--ui=primevue` | Instala Inertia + Vue + PrimeVue. |
+| `--ui=naive` | Instala Inertia + Vue + Naive UI. |
+| `--ui=react` | Instala Inertia + React + MUI. |
+| `--ui=wireui` | Instala Livewire + WireUI. |
+| `--auth` | Instala rutas, controladores, requests, vistas y tests de autenticacion. |
+| `--force` | Sobrescribe archivos existentes y limpia archivos administrados por presets anteriores. |
+| `--no-interaction` | Ejecuta el comando sin preguntas. Si no indicas `--ui`, usa `primevue`. |
 
-## Autenticacion Incluida
-
-Con `--auth`, el paquete instala un flujo completo sin Fortify:
-
-- Registro de usuarios.
-- Login y logout.
-- Remember me.
-- Recuperacion de password por email.
-- Reset de password por token.
-- Verificacion de email.
-- Confirmacion de password para acciones sensibles.
-- Perfil de usuario.
-- Cambio de password.
-- Cierre de otras sesiones.
-- Eliminacion de cuenta.
-- Two-factor authentication TOTP.
-- QR para app autenticadora.
-- Confirmacion de codigo TOTP.
-- Codigos de recuperacion.
-- Regeneracion de codigos.
-- Challenge 2FA antes de completar login.
-
-La configuracion principal queda en:
-
-```php
-config/servicios-linea-once.php
-```
-
-Variables relevantes:
-
-```env
-SLO_AUTH_REGISTRATION=true
-SLO_AUTH_TWO_FACTOR=true
-```
-
-El paquete agrega columnas 2FA a `users` con una migracion:
-
-```text
-database/migrations/2026_01_01_000100_add_two_factor_columns_to_users_table.php
-```
-
-## Idiomas e Internacionalizacion
-
-El paquete maneja idioma en dos niveles:
-
-### Idioma del comando
-
-El instalador puede mostrar preguntas en ingles o espanol:
+Ejemplo para CI o scripts:
 
 ```bash
-php artisan kitlauncher:install --lang=es
-php artisan kitlauncher:install --lang=en
+php artisan kitlauncher:install --lang=en --ui=react --auth --force --no-interaction
 ```
 
-Si no se pasa `--lang`, el wizard pregunta el idioma antes de cualquier otra pregunta.
+## Que archivos instala
 
-### Idioma de la aplicacion instalada
-
-El scaffolding copia:
-
-```text
-app/Http/Middleware/SetLocale.php
-lang/es/kit.php
-lang/en/kit.php
-```
-
-`SetLocale` lee `locale` desde la sesion y aplica `App::setLocale()` si el valor es `es` o `en`.
-
-Los presets Inertia incluyen tambien un helper frontend con persistencia en `localStorage`:
-
-```text
-resources/js/lib/i18n.js
-resources/js/lib/i18n.jsx
-```
-
-## Archivos Que Modifica
-
-El comando puede crear o sobrescribir archivos en estas areas:
+El comando puede crear o modificar archivos en estas rutas:
 
 ```text
 app/Http/Controllers/Auth
@@ -325,27 +318,208 @@ app/Livewire
 app/Models/User.php
 app/Support/Auth
 bootstrap/app.php
+composer.json
 config/servicios-linea-once.php
 database/migrations
-lang
+lang/en/kit.php
+lang/es/kit.php
 package.json
-composer.json
 resources/css
 resources/js
 resources/views
 routes/auth.php
 routes/web.php
 tests/Feature/Auth
+tests/Feature/ExampleTest.php
 vite.config.js
 ```
 
-Sin `--force`, el comando omite archivos y directorios existentes para no pisar trabajo del proyecto.
+Sin `--force`, los archivos existentes se omiten para proteger cambios del proyecto.
 
-Con `--force`, sobrescribe stubs y limpia archivos obsoletos del preset anterior.
+Con `--force`, el comando sobrescribe stubs administrados por el starter kit y limpia rutas frontend obsoletas, por ejemplo:
 
-## Comandos Posteriores
+```text
+resources/js/Components
+resources/js/Layouts
+resources/js/Pages
+resources/js/lib
+resources/js/presets
+resources/views/layouts
+resources/views/pages
+resources/css/theme-effects.css
+tests/Feature/ExampleTest.php
+```
 
-Al terminar, el comando recomienda:
+## Autenticacion
+
+Al usar `--auth`, el starter kit instala un flujo completo de autenticacion web.
+
+Incluye:
+
+- Registro de usuario.
+- Login.
+- Logout.
+- Remember me.
+- Recuperacion de password.
+- Reset de password por token.
+- Verificacion de email.
+- Reenvio de email de verificacion.
+- Confirmacion de password.
+- Dashboard protegido.
+- Perfil de usuario.
+- Actualizacion de informacion personal.
+- Cambio de password.
+- Cierre de otras sesiones.
+- Eliminacion de cuenta.
+- Tests feature para los flujos principales.
+
+Rutas principales:
+
+```text
+GET    /login
+POST   /login
+POST   /logout
+GET    /register
+POST   /register
+GET    /forgot-password
+POST   /forgot-password
+GET    /reset-password/{token}
+POST   /reset-password
+GET    /verify-email
+GET    /verify-email/{id}/{hash}
+POST   /email/verification-notification
+GET    /confirm-password
+POST   /confirm-password
+GET    /dashboard
+GET    /settings/profile
+PATCH  /settings/profile
+DELETE /settings/profile
+PUT    /settings/password
+DELETE /settings/sessions
+```
+
+La configuracion queda en:
+
+```text
+config/servicios-linea-once.php
+```
+
+Variables disponibles:
+
+```env
+SLO_AUTH_REGISTRATION=true
+SLO_AUTH_TWO_FACTOR=true
+```
+
+## Two-Factor Authentication
+
+El starter kit incluye 2FA basado en TOTP.
+
+Paquetes usados:
+
+- `pragmarx/google2fa`
+- `bacon/bacon-qr-code`
+
+Incluye:
+
+- Activacion de 2FA desde perfil.
+- Confirmacion con codigo TOTP.
+- QR para apps autenticadoras.
+- Codigos de recuperacion.
+- Regeneracion de codigos.
+- Challenge de segundo factor durante login.
+- Middleware para completar el challenge antes de acceder.
+
+Rutas principales:
+
+```text
+GET    /two-factor-challenge
+POST   /two-factor-challenge
+DELETE /two-factor-challenge
+POST   /settings/two-factor
+POST   /settings/two-factor/confirm
+DELETE /settings/two-factor
+POST   /settings/two-factor/recovery-codes
+```
+
+Migracion instalada:
+
+```text
+database/migrations/2026_01_01_000100_add_two_factor_columns_to_users_table.php
+```
+
+Configuracion base:
+
+```php
+return [
+    'auth' => [
+        'registration' => env('SLO_AUTH_REGISTRATION', true),
+
+        'two_factor' => [
+            'enabled' => env('SLO_AUTH_TWO_FACTOR', true),
+            'required' => false,
+            'issuer' => env('APP_NAME', 'Servicio Linea Once'),
+            'window' => 1,
+            'recovery_codes' => 8,
+        ],
+    ],
+];
+```
+
+## Internacionalizacion
+
+El paquete trabaja con dos idiomas:
+
+- `es`
+- `en`
+
+### Idioma del instalador
+
+El idioma del comando se controla con:
+
+```bash
+php artisan kitlauncher:install --lang=es
+php artisan kitlauncher:install --lang=en
+```
+
+Si no pasas `--lang` y el comando es interactivo, el instalador pregunta:
+
+```text
+Choose installer language / Elige el idioma del instalador
+```
+
+### Idioma de la aplicacion
+
+El scaffolding instala:
+
+```text
+app/Http/Middleware/SetLocale.php
+lang/es/kit.php
+lang/en/kit.php
+```
+
+Tambien registra la ruta:
+
+```text
+POST /locale/{locale}
+```
+
+El middleware lee el idioma desde la sesion:
+
+```php
+$locale = $request->session()->get('locale', config('app.locale', 'es'));
+```
+
+Los presets Inertia incluyen helpers frontend:
+
+```text
+resources/js/lib/i18n.js
+resources/js/lib/i18n.jsx
+```
+
+## Flujo recomendado despues de instalar
+
+El instalador puede modificar `composer.json` y `package.json` segun el preset elegido. Por eso, despues de ejecutarlo, corre:
 
 ```bash
 composer install
@@ -354,39 +528,182 @@ php artisan migrate
 npm run build
 ```
 
-En modo interactivo tambien puede ejecutarlos si el usuario confirma.
-
-En Docker, ejecuta Composer dentro de `app` y NPM dentro de `vite`:
+Para iniciar el entorno de desarrollo:
 
 ```bash
-docker compose exec app composer install
-docker compose exec vite npm install
-docker compose exec app php artisan migrate
-docker compose exec vite npm run build
+npm run dev
+php artisan serve
 ```
 
-## Agregar un Nuevo Preset UI
-
-Los presets viven en `InstallCommand::UI_PRESETS`.
-
-Para agregar uno nuevo:
-
-1. Crear una carpeta `stubs/presets/{nombre}/install` con el frontend del preset (CSS, `app.{js,jsx}`, `vite.config.js`, `Components`, `Layouts`, `Pages`, etc.). Si el preset cambia rutas, controladores o vistas backend, crear también `stubs/presets/{nombre}/auth` con esos overrides.
-2. Agregar entrada en `UI_PRESETS`.
-3. Definir:
-   - `label`
-   - `stack`
-   - `extension`
-   - `inertia`
-   - `composer`
-   - `dependencies`
-   - `devDependencies`
-4. Agregar dependencias propias del preset.
-5. Agregar rutas/vistas/componentes necesarias.
-6. Probar instalacion con:
+Para validar el proyecto:
 
 ```bash
-php artisan kitlauncher:install --lang=es --ui={nombre} --auth --force
+php artisan test
+```
+
+## Cambiar de preset
+
+Puedes cambiar de preset ejecutando el instalador otra vez con `--force`.
+
+De PrimeVue a React:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=react --auth --force --no-interaction
+composer install
+npm install
+npm run build
+```
+
+De Inertia a WireUI:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=wireui --auth --force --no-interaction
+composer install
+npm install
+npm run build
+```
+
+Al cambiar de preset, el comando:
+
+- Actualiza dependencias Composer.
+- Actualiza dependencias NPM.
+- Elimina dependencias UI obsoletas conocidas.
+- Limpia archivos frontend administrados.
+- Cambia `vite.config.js`.
+- Elimina `HandleInertiaRequests` si el preset nuevo no usa Inertia.
+
+## Estructura del paquete
+
+```text
+starter-kit/
+|-- src/
+|   |-- StarterKitServiceProvider.php
+|   `-- Console/
+|       `-- InstallCommand.php
+|-- stubs/
+|   |-- base/
+|   |   |-- install/
+|   |   |-- auth/
+|   |   `-- middleware/
+|   `-- presets/
+|       |-- primevue/
+|       |-- naive/
+|       |-- react/
+|       `-- wireui/
+|-- composer.json
+|-- LICENSE
+`-- README.md
+```
+
+### `StarterKitServiceProvider`
+
+Registra el comando cuando Laravel corre en consola:
+
+```php
+$this->commands([
+    InstallCommand::class,
+]);
+```
+
+### `InstallCommand`
+
+Contiene la logica principal:
+
+- definicion de presets UI
+- validacion de opciones
+- wizard bilingue
+- actualizacion de `composer.json`
+- actualizacion de `package.json`
+- copia de stubs
+- registro de middleware
+- instalacion de auth
+- limpieza de archivos obsoletos
+- ejecucion opcional de comandos posteriores
+
+### `stubs/base`
+
+Archivos comunes para todos los presets:
+
+- rutas base
+- middleware de locale
+- middleware Inertia
+- configuracion de auth
+- controladores
+- requests
+- modelo `User`
+- soporte de 2FA
+- migracion de 2FA
+- tests de auth
+- traducciones
+
+### `stubs/presets`
+
+Archivos especificos por UI:
+
+```text
+stubs/presets/primevue
+stubs/presets/naive
+stubs/presets/react
+stubs/presets/wireui
+```
+
+Cada preset puede tener:
+
+- `install`: archivos instalados siempre.
+- `auth`: archivos instalados solo con `--auth`.
+
+## Crear un nuevo preset
+
+Los presets se registran en `InstallCommand::UI_PRESETS`.
+
+Pasos recomendados:
+
+1. Crear una carpeta para el preset:
+
+```text
+stubs/presets/{nombre}/install
+```
+
+2. Agregar los archivos frontend necesarios:
+
+```text
+resources/css/app.css
+resources/js/app.js
+resources/js/Pages
+resources/js/Layouts
+resources/js/Components
+resources/views/app.blade.php
+vite.config.js
+```
+
+3. Si el preset tiene pantallas de auth propias, crear:
+
+```text
+stubs/presets/{nombre}/auth
+```
+
+4. Registrar el preset en `UI_PRESETS`:
+
+```php
+'nombre' => [
+    'label' => 'Nombre UI',
+    'stack' => 'inertia',
+    'extension' => 'js',
+    'inertia' => true,
+    'composer' => self::INERTIA_COMPOSER_REQUIREMENTS,
+    'dependencies' => [
+        // npm dependencies
+    ],
+    'devDependencies' => [
+        // npm dev dependencies
+    ],
+],
+```
+
+5. Probar instalacion:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=nombre --auth --force --no-interaction
 composer install
 npm install
 php artisan migrate
@@ -398,112 +715,108 @@ php artisan test
 
 ### `Class "Livewire\LivewireServiceProvider" not found`
 
-El proyecto probablemente tiene `composer.json` actualizado, pero `vendor` no esta sincronizado.
+El proyecto tiene `composer.json` actualizado, pero `vendor` todavia no tiene las dependencias nuevas.
 
-Solucion local:
+Solucion:
 
 ```bash
 composer install
 php artisan optimize:clear
 ```
 
-Solucion Docker:
-
-```bash
-docker compose exec app composer install
-docker compose exec app php artisan optimize:clear
-```
-
 ### `Class "Inertia\Middleware" not found`
 
-Ocurre cuando la app quedo con middleware Inertia registrado pero el preset actual es Livewire/WireUI.
+Suele ocurrir si la aplicacion quedo con middleware Inertia registrado, pero ya no tiene instalado `inertiajs/inertia-laravel`.
 
-Solucion:
+Solucion al usar WireUI:
 
 ```bash
-php artisan kitlauncher:install --ui=wireui --auth --force --no-interaction
+php artisan kitlauncher:install --lang=es --ui=wireui --auth --force --no-interaction
 composer install
 php artisan optimize:clear
 ```
 
 ### Tailwind no encuentra `@tailwindcss/forms`
 
-En WireUI, NPM debe estar sincronizado:
+El preset WireUI necesita instalar dependencias NPM.
 
 ```bash
 npm install
 npm run build
 ```
 
-En Docker:
+### Vite no encuentra paginas Inertia
+
+Verifica que el preset y la extension coincidan:
+
+- Vue usa `resources/js/app.js` y paginas `.vue`.
+- React usa `resources/js/app.jsx` y paginas `.jsx`.
+- WireUI no usa paginas Inertia.
+
+Si cambiaste de preset, reinstala con `--force`:
 
 ```bash
-docker compose exec vite npm install
-docker compose exec vite npm run build
+php artisan kitlauncher:install --lang=es --ui=react --auth --force --no-interaction
+npm install
+npm run build
 ```
 
-### Cambie de preset y quedan dependencias viejas
+### La ruta `/dashboard` no existe
 
-Usa `--force` para que el instalador limpie archivos obsoletos y actualice `composer.json` / `package.json`:
+Instala auth con `--auth`. El dashboard protegido se registra dentro de `routes/auth.php`.
 
 ```bash
-php artisan kitlauncher:install --ui=react --auth --force
+php artisan kitlauncher:install --lang=es --ui=primevue --auth --force --no-interaction
+```
+
+### El instalador omite archivos existentes
+
+Es el comportamiento esperado cuando no usas `--force`.
+
+Para sobrescribir los archivos administrados por el starter kit:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=primevue --auth --force
+```
+
+### No se ven cambios despues de instalar
+
+Limpia caches y recompila:
+
+```bash
+php artisan optimize:clear
+npm run build
+```
+
+## Desarrollo
+
+Comandos utiles para mantener el paquete:
+
+```bash
+composer validate --no-check-publish
+php -l src/StarterKitServiceProvider.php
+php -l src/Console/InstallCommand.php
+```
+
+Validacion recomendada dentro de una app Laravel de prueba:
+
+```bash
+php artisan kitlauncher:install --lang=es --ui=primevue --auth --force --no-interaction
 composer install
 npm install
+php artisan migrate
+npm run build
+php artisan test
 ```
 
-## Desarrollo del Paquete
-
-Estructura principal:
-
-```text
-src/
-  StarterKitServiceProvider.php
-  Console/InstallCommand.php
-stubs/
-  base/
-    install/
-    auth/
-    middleware/
-  presets/
-    primevue/
-      install/
-      auth/
-    naive/
-      install/
-      auth/
-    react/
-      install/
-      auth/
-    wireui/
-      install/
-      auth/
-composer.json
-LICENSE
-```
-
-`StarterKitServiceProvider` registra el comando cuando Laravel corre en consola.
-
-`InstallCommand` contiene:
-
-- Definicion de presets UI.
-- Wizard bilingue.
-- Actualizacion de Composer.
-- Actualizacion de NPM.
-- Copia de stubs.
-- Registro de middleware.
-- Limpieza de archivos obsoletos.
-- Ejecucion opcional de comandos posteriores.
-
-Validaciones recomendadas:
+Repetir la validacion para cada preset:
 
 ```bash
-php -l src/Console/InstallCommand.php
-composer validate --no-check-publish
-php artisan test
-npm run build
+php artisan kitlauncher:install --lang=es --ui=naive --auth --force --no-interaction
+php artisan kitlauncher:install --lang=es --ui=react --auth --force --no-interaction
+php artisan kitlauncher:install --lang=es --ui=wireui --auth --force --no-interaction
 ```
 
 ## Licencia
 
-MIT. Ver `LICENSE`.
+Este paquete esta publicado bajo licencia MIT. Ver [LICENSE](LICENSE).
